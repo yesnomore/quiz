@@ -1,0 +1,416 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="quiz.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityContainer Name="quizStoreContainer">
+    <EntitySet Name="Users" EntityType="quiz.Store.Users" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Quizs" EntityType="quiz.Store.Quizs" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Questions" EntityType="quiz.Store.Questions" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Answers" EntityType="quiz.Store.Answers" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Stats" EntityType="quiz.Store.Stats" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UserAnswer" EntityType="quiz.Store.UserAnswer" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="QuizQuestion" Association="quiz.Store.QuizQuestion">
+      <End Role="Quiz" EntitySet="Quizs" />
+      <End Role="Question" EntitySet="Questions" />
+    </AssociationSet>
+    <AssociationSet Name="QuestionAnswer" Association="quiz.Store.QuestionAnswer">
+      <End Role="Question" EntitySet="Questions" />
+      <End Role="Answer" EntitySet="Answers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserAnswer_User" Association="quiz.Store.FK_UserAnswer_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="UserAnswer" EntitySet="UserAnswer" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserAnswer_Answer" Association="quiz.Store.FK_UserAnswer_Answer">
+      <End Role="Answer" EntitySet="Answers" />
+      <End Role="UserAnswer" EntitySet="UserAnswer" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Stats_Quizs" Association="quiz.Store.FK_Stats_Quizs">
+      <End Role="Quiz" EntitySet="Quizs" />
+      <End Role="Stat" EntitySet="Stats" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Stats_User" Association="quiz.Store.FK_Stats_User">
+      <End Role="User" EntitySet="Users" />
+      <End Role="Stat" EntitySet="Stats" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Login" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Password" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Quizs">
+    <Key>
+      <PropertyRef Name="QuizId" />
+    </Key>
+    <Property Name="QuizId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Questions">
+    <Key>
+      <PropertyRef Name="QuestionId" />
+    </Key>
+    <Property Name="QuestionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="QuizId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Answers">
+    <Key>
+      <PropertyRef Name="AnswerId" />
+    </Key>
+    <Property Name="AnswerId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsCorrect" Type="bit" Nullable="false" />
+    <Property Name="QuestionId" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="true" />
+  </EntityType>
+  <EntityType Name="Stats">
+    <Key>
+      <PropertyRef Name="StatId" />
+    </Key>
+    <Property Name="StatId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Users_UserId" Type="int" Nullable="false" />
+    <Property Name="Quizs_QuizId" Type="int" Nullable="false" />
+    <Property Name="CorrectAnswers" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="UserAnswer">
+    <Key>
+      <PropertyRef Name="Users_UserId" />
+      <PropertyRef Name="Answers_AnswerId" />
+    </Key>
+    <Property Name="Users_UserId" Type="int" Nullable="false" />
+    <Property Name="Answers_AnswerId" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="QuizQuestion">
+    <End Role="Quiz" Type="quiz.Store.Quizs" Multiplicity="1" />
+    <End Role="Question" Type="quiz.Store.Questions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Quiz">
+        <PropertyRef Name="QuizId" />
+      </Principal>
+      <Dependent Role="Question">
+        <PropertyRef Name="QuizId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="QuestionAnswer">
+    <End Role="Question" Type="quiz.Store.Questions" Multiplicity="1" />
+    <End Role="Answer" Type="quiz.Store.Answers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Question">
+        <PropertyRef Name="QuestionId" />
+      </Principal>
+      <Dependent Role="Answer">
+        <PropertyRef Name="QuestionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Stats_Quizs">
+    <End Role="Quiz" Type="quiz.Store.Quizs" Multiplicity="1" />
+    <End Role="Stat" Type="quiz.Store.Stats" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Quiz">
+        <PropertyRef Name="QuizId" />
+      </Principal>
+      <Dependent Role="Stat">
+        <PropertyRef Name="Quizs_QuizId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Stats_User">
+    <End Role="User" Type="quiz.Store.Users" Multiplicity="1" />
+    <End Role="Stat" Type="quiz.Store.Stats" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Stat">
+        <PropertyRef Name="Users_UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserAnswer_User">
+    <End Role="User" Type="quiz.Store.Users" Multiplicity="1" />
+    <End Role="UserAnswer" Type="quiz.Store.UserAnswer" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="User">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="UserAnswer">
+        <PropertyRef Name="Users_UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserAnswer_Answer">
+    <End Role="UserAnswer" Type="quiz.Store.UserAnswer" Multiplicity="*" />
+    <End Role="Answer" Type="quiz.Store.Answers" Multiplicity="1" />
+    <ReferentialConstraint>
+      <Principal Role="Answer">
+        <PropertyRef Name="AnswerId" />
+      </Principal>
+      <Dependent Role="UserAnswer">
+        <PropertyRef Name="Answers_AnswerId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema xmlns="http://schemas.microsoft.com/ado/2008/09/edm" xmlns:cg="http://schemas.microsoft.com/ado/2006/04/codegeneration" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" Namespace="quiz" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation">
+        <EntityContainer Name="quizContainer" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Users" EntityType="quiz.User" />
+          <EntitySet Name="Quizs" EntityType="quiz.Quiz" />
+          <EntitySet Name="Questions" EntityType="quiz.Question" />
+          <AssociationSet Name="QuizQuestion" Association="quiz.QuizQuestion">
+            <End Role="Quiz" EntitySet="Quizs" />
+            <End Role="Question" EntitySet="Questions" />
+          </AssociationSet>
+          <EntitySet Name="Answers" EntityType="quiz.Answer" />
+          <AssociationSet Name="QuestionAnswer" Association="quiz.QuestionAnswer">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="Answer" EntitySet="Answers" />
+          </AssociationSet>
+          <AssociationSet Name="UserAnswer" Association="quiz.UserAnswer">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Answer" EntitySet="Answers" />
+          </AssociationSet>
+          <EntitySet Name="Stats" EntityType="quiz.Stat" />
+          <AssociationSet Name="FK_Stats_Quizs" Association="quiz.FK_Stats_Quizs">
+            <End Role="Quiz" EntitySet="Quizs" />
+            <End Role="Stat" EntitySet="Stats" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Stats_User" Association="quiz.FK_Stats_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Stat" EntitySet="Stats" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Type="Int32" Name="UserId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Login" Nullable="false" />
+          <Property Type="String" Name="Password" Nullable="false" />
+          <Property Type="String" Name="FirstName" Nullable="false" />
+          <Property Type="String" Name="LastName" Nullable="false" />
+          <NavigationProperty Name="Answers" Relationship="quiz.UserAnswer" FromRole="User" ToRole="Answer" />
+          <NavigationProperty Name="Stats" Relationship="quiz.FK_Stats_User" FromRole="User" ToRole="Stat" />
+        </EntityType>
+        <EntityType Name="Quiz">
+          <Key>
+            <PropertyRef Name="QuizId" />
+          </Key>
+          <Property Type="Int32" Name="QuizId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <NavigationProperty Name="Questions" Relationship="quiz.QuizQuestion" FromRole="Quiz" ToRole="Question" />
+          <NavigationProperty Name="Stats" Relationship="quiz.FK_Stats_Quizs" FromRole="Quiz" ToRole="Stat" />
+        </EntityType>
+        <EntityType Name="Question">
+          <Key>
+            <PropertyRef Name="QuestionId" />
+          </Key>
+          <Property Type="Int32" Name="QuestionId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <NavigationProperty Name="Quiz" Relationship="quiz.QuizQuestion" FromRole="Question" ToRole="Quiz" />
+          <Property Type="Int32" Name="QuizId" Nullable="false" />
+          <NavigationProperty Name="Answers" Relationship="quiz.QuestionAnswer" FromRole="Question" ToRole="Answer" />
+        </EntityType>
+        <Association Name="QuizQuestion">
+          <End Type="quiz.Quiz" Role="Quiz" Multiplicity="1" />
+          <End Type="quiz.Question" Role="Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Quiz">
+              <PropertyRef Name="QuizId" />
+            </Principal>
+            <Dependent Role="Question">
+              <PropertyRef Name="QuizId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Answer">
+          <Key>
+            <PropertyRef Name="AnswerId" />
+          </Key>
+          <Property Type="Int32" Name="AnswerId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Description" Nullable="false" />
+          <Property Type="Boolean" Name="IsCorrect" Nullable="false" />
+          <NavigationProperty Name="Question" Relationship="quiz.QuestionAnswer" FromRole="Answer" ToRole="Question" />
+          <Property Type="Int32" Name="QuestionId" Nullable="false" />
+          <Property Type="Int32" Name="UserId" Nullable="true" />
+          <NavigationProperty Name="Users" Relationship="quiz.UserAnswer" FromRole="Answer" ToRole="User" />
+        </EntityType>
+        <Association Name="QuestionAnswer">
+          <End Type="quiz.Question" Role="Question" Multiplicity="1" />
+          <End Type="quiz.Answer" Role="Answer" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="QuestionId" />
+            </Principal>
+            <Dependent Role="Answer">
+              <PropertyRef Name="QuestionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="UserAnswer">
+          <End Type="quiz.User" Role="User" Multiplicity="*" />
+          <End Type="quiz.Answer" Role="Answer" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Stat">
+          <Key>
+            <PropertyRef Name="StatId" />
+          </Key>
+          <Property Type="Int32" Name="StatId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="Users_UserId" Nullable="false" />
+          <Property Type="Int32" Name="Quizs_QuizId" Nullable="false" />
+          <Property Type="Int32" Name="CorrectAnswers" Nullable="false" />
+          <NavigationProperty Name="Quiz" Relationship="quiz.FK_Stats_Quizs" FromRole="Stat" ToRole="Quiz" />
+          <NavigationProperty Name="User" Relationship="quiz.FK_Stats_User" FromRole="Stat" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Stats_Quizs">
+          <End Type="quiz.Quiz" Role="Quiz" Multiplicity="1" />
+          <End Type="quiz.Stat" Role="Stat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Quiz">
+              <PropertyRef Name="QuizId" />
+            </Principal>
+            <Dependent Role="Stat">
+              <PropertyRef Name="Quizs_QuizId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Stats_User">
+          <End Type="quiz.User" Role="User" Multiplicity="1" />
+          <End Type="quiz.Stat" Role="Stat" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="UserId" />
+            </Principal>
+            <Dependent Role="Stat">
+              <PropertyRef Name="Users_UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+    <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="quizStoreContainer" CdmEntityContainer="quizContainer">
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="IsTypeOf(quiz.User)">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+          <ScalarProperty Name="Login" ColumnName="Login" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Quizs">
+      <EntityTypeMapping TypeName="IsTypeOf(quiz.Quiz)">
+        <MappingFragment StoreEntitySet="Quizs">
+          <ScalarProperty Name="QuizId" ColumnName="QuizId" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Questions">
+      <EntityTypeMapping TypeName="IsTypeOf(quiz.Question)">
+        <MappingFragment StoreEntitySet="Questions">
+          <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="QuizId" ColumnName="QuizId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Answers">
+      <EntityTypeMapping TypeName="IsTypeOf(quiz.Answer)">
+        <MappingFragment StoreEntitySet="Answers">
+          <ScalarProperty Name="AnswerId" ColumnName="AnswerId" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="IsCorrect" ColumnName="IsCorrect" />
+          <ScalarProperty Name="QuestionId" ColumnName="QuestionId" />
+          <ScalarProperty Name="UserId" ColumnName="UserId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Stats">
+      <EntityTypeMapping TypeName="IsTypeOf(quiz.Stat)">
+        <MappingFragment StoreEntitySet="Stats">
+          <ScalarProperty Name="StatId" ColumnName="StatId" />
+          <ScalarProperty Name="Users_UserId" ColumnName="Users_UserId" />
+          <ScalarProperty Name="Quizs_QuizId" ColumnName="Quizs_QuizId" />
+          <ScalarProperty Name="CorrectAnswers" ColumnName="CorrectAnswers" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="UserAnswer" TypeName="quiz.UserAnswer" StoreEntitySet="UserAnswer">
+      <EndProperty Name="User">
+        <ScalarProperty Name="UserId" ColumnName="Users_UserId" />
+      </EndProperty>
+      <EndProperty Name="Answer">
+        <ScalarProperty Name="AnswerId" ColumnName="Answers_AnswerId" />
+      </EndProperty>
+    </AssociationSetMapping>
+  </EntityContainerMapping>
+</Mapping></edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <edmx:Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </edmx:Connection>
+    <edmx:Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </edmx:Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram Name="quiz" >
+        <EntityTypeShape EntityType="quiz.User" Width="2.25" PointX="0.5" PointY="0.5" Height="1.9991869620482126" />
+        <EntityTypeShape EntityType="quiz.Quiz" Width="1.5" PointX="4.75" PointY="0.5" Height="1.5319933734337488" />
+        <EntityTypeShape EntityType="quiz.Question" Width="2.125" PointX="7.125" PointY="1.625" Height="1.2205309810241065" />
+        <AssociationConnector Association="quiz.QuizQuestion">
+          <ConnectorPoint PointX="6.25" PointY="1.8284966867168744" />
+          <ConnectorPoint PointX="7.125" PointY="1.8284966867168744" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="quiz.Answer" Width="2" PointX="5.25" PointY="5.25" Height="1.9991869620482117" />
+        <AssociationConnector Association="quiz.QuestionAnswer">
+          <ConnectorPoint PointX="8.2500005" PointY="3.31272456963857" />
+          <ConnectorPoint PointX="8.2500005" PointY="6.2495934810241058" />
+          <ConnectorPoint PointX="7.25" PointY="6.2495934810241058" />
+        </AssociationConnector>
+        <AssociationConnector Association="quiz.UserAnswer">
+          <ConnectorPoint PointX="1.625" PointY="2.4991869620482126" />
+          <ConnectorPoint PointX="1.625" PointY="6.2495934810241058" />
+          <ConnectorPoint PointX="5.25" PointY="6.2495934810241058" />
+        </AssociationConnector>
+        <EntityTypeShape EntityType="quiz.Stat" Width="1.5" PointX="4.25" PointY="2.75" Height="1.843455765843391" />
+        <AssociationConnector Association="quiz.FK_Stats_Quizs" >
+          <ConnectorPoint PointX="5.25" PointY="2.0319933734337488" />
+          <ConnectorPoint PointX="5.25" PointY="2.75" />
+        </AssociationConnector>
+        <AssociationConnector Association="quiz.FK_Stats_User" >
+          <ConnectorPoint PointX="2.75" PointY="2.2968401677409807" />
+          <ConnectorPoint PointX="4.46875" PointY="2.2968401677409807" />
+          <ConnectorPoint PointX="4.46875" PointY="2.75" />
+        </AssociationConnector>
+        </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,32 @@
+﻿body{margin-left:20em;}   
+     .login_box{background:#E8EEFA; padding:3em; width:30em;}
+     label.error {display: block;  color: red; clear:left }
+     #error{display: block;  color: red;font-family: Arial, sans-serif; font-size :larger;}
+     .input_text
+     {     	
+	    border-color: #7F9DB9;
+	    border-style: solid;
+	    border-width: 0.3em;
+	    color: #2b88c2;
+	    font-family: Arial, sans-serif;
+	    font-size :larger;
+	    height: 2em;
+	    width: 16em;
+     }
+     label
+     {
+     	font-family: Arial, sans-serif;
+	    font-size :larger;
+     }
+     .submit{
+         border:none;
+         color:#fff;
+         font-family:Arial, sans-serif;
+         font-weight:bold;         
+	     font-size:1.4em;
+         background: transparent url('../../images/login.jpg') no-repeat top left;
+         width:219px;
+         height:53px;
+         cursor:pointer;
+    }     
+		 

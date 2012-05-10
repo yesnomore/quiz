@@ -1,0 +1,20 @@
+﻿body
+{
+background:#E8EEFA;
+font-family: verdana,sans-serif;	     	
+}
+.container
+{
+background:#FFFFFF;	    
+width:800px;
+padding:20px;
+-moz-border-radius: 5px;
+border-radius: 5px; 
+margin-left: auto ;
+margin-right: auto ;
+font-size:x-large;
+}
+a:link {color:#0000FF;}     
+a:visited {color:#0000FF;} 
+a:hover {color:#0000FF;}  
+a:active {color:#0000FF;} 
